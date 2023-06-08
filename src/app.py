@@ -62,12 +62,14 @@ async def initial_page(request: Request):
 @app.post("/")
 async def link_page(request: Request, fiat: str = Form(...), amount: int = Form(...), description: str = Form(...)):
     try:
-        # if fiat is None:
+        # if fiat is None or amount is None:
         #     return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
         
         print("Inside post method /")
-        baselink = "https://localhost:8000"
-        satslink  =  baselink + f"/fiat/{fiat}/amt/{amount}"
+        base_url = str(request.url)
+
+        # print(f"The current URL is: {base_url}")
+        satslink  =  base_url + f"fiat/{fiat}/amt/{amount}"
         return templates.TemplateResponse("index.html",
                                       context={
                                           'request': request,
