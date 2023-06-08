@@ -53,7 +53,7 @@ Json passed in body
 
 This example shows how to use FastAPI on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
 
-## Deploy to Vercel 
+## 1-Click Deploy to Vercel 
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbitkarrot%2Fsatspaysession&env=LNBITS_WALLET,ONCHAIN_WALLET,LNBITS_URL,WEBHOOK,INVOICE_API_KEY)
 
