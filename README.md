@@ -12,6 +12,9 @@ then redirect the user to a lightning invoice created by the satspayserver exten
 
 ## Env variables
 
+For More information about how SatsPay Server works in LNBits, please visit the [extension page](https://github.com/lnbits/satspay)
+and the [LNbits.com website](https://lnbits.com)
+
 set your LNBits environment variables in vercel
 
 ```sh
