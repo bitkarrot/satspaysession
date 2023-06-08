@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html data-theme="dark" data-webp="true" lang="en">
+<link rel="stylesheet" href="/static/pico.min.css" />
+<link rel="stylesheet" href="/static/css/themes/lime.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css"
+  type="text/css">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon.png">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:url" content="https://satspaylink.vercel.com" />
+  <meta charset="utf-8">  
+  <title>{{ title }}</title>
+</head>
+
+<body>
+  <!-- Nav -->
+  <nav class="container-fluid" style="border-bottom-style:solid; border-color: rgb(66, 66, 66); border-width: 0.1px">
+  <ul>
+      <img src="/static/images/bitkarrot_256.jpg" height="64" width="64"
+      alt="Bitkarrot" />
+    </a>
+  </ul>
+    <ul>
+      <li>
+        <a class="secondary" href="https://github.com/bitkarrot">Github</a>
+      </li>
+      <li>
+        <a class="secondary" href="https://iris.to/bitkarrot">Nostr</a>
+      </li>
+      <li>
+        <a class="secondary" href="https://bitkarrot.substack.com">Substack</a>
+      </li>
+    </ul>
+  </nav><!-- ./ Nav -->
+
+  <main class="container center-sm">
+    <hgroup>
+        <h1 style="color:#A5D601">
+            Welcome to {{ title }}!
+        </h1>
+        <p>This micro app delivers a custom Invoice amount Link to
+            the LNBits SatsPayExtension, payable to Bitkarrot.
+        </p>
+    </hgroup>
+
+    <section id="converter">
+      <div class="grid">   
+        <div align="center">
+            <section>
+                <div class="center">
+                    <h4 style="color:#A5D601"> 
+                        <a href="{{satslink}}">{{satslink}}</a>
+                    </h4>
+                </div>
+            </section>
+
+            <form id="my-form" action="/" method="post">
+                <fieldset>
+                  <label>
+                    3 Letter Fiat Code (USD, EUR, etc.)
+                    <input
+                      name="fiat"
+                      placeholder="{{fiat}}"
+                      value="{{fiat}}"
+                    />
+                  </label>
+                  <label>
+                    Amount
+                    <input
+                      name="amount"
+                      placeholder="100"
+                      value="{{amount}}"
+                      />
+                  </label>
+                  <label>
+                    Short Description (optional, Max 15 characters)
+                    <input
+                      name="description"
+                      placeholder="Meeting"
+                      value="{{description}}"
+                      />
+                  </label>
+
+                </fieldset>              
+                <input
+                  type="submit"
+                  value="Get Invoice Link!"
+                />
+              </form>
+            </div>
+      </div>
+      <div align="left">
+        <p>
+            <h4>Why do this?</h4>
+            
+            Because we want to be able to specify a BTCPay style lightning invoice 
+            in sats with the USD amount (or any other fiat) with
+            a link instead of creating it manually from within
+            the LNBits web interface. 
+
+            We can then share links or add to other applications, 
+            such as calendar bookings without extra integration steps.
+        </p>
+        <p>
+            Alternatively, you can just make a url directly without this form, 
+            using the guideline below.
+        </p>
+        <p><em>
+            URL Pattern: https://satspaylink.vercel.app/fiat/{currency}/amt/{value}
+        </em>
+        </p>           
+    </div>
+    </section>
+    <footer>
+      Built with <a href="https://picocss.com"> Pico </a> • <a href="https://github.com/bitkarrot/satspaysession">
+        Source </a>
+    </footer>
+  </main>
+
+
+</body>
+
+</html>

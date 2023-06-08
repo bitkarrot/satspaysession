@@ -1,6 +1,6 @@
 # Satspay Session
 
-This micro app delivers a custom Invoice amount from the SatsPayExtension fron LNbits via an Flask API endpoint. 
+This micro app delivers a custom Invoice amount from the SatsPayExtension fron LNbits via an FastAPI endpoint. 
 Why do this? Because we want to be able to specify a lightning invoice in sats with the USD amount (or any other fiat equivalent amount) with a link instead of creating it manually from within the LNBits web interface. 
 
 URL Pattern:
