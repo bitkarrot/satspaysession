@@ -3,7 +3,7 @@
 This micro app delivers a custom Invoice amount from the SatsPayExtension fron LNbits via an Flask API endpoint. 
 Why do this? Because we want to be able to specify a lightning invoice in sats with the USD amount (or any other fiat equivalent amount) with a link instead of creating it manually from within the LNBits web interface. 
 
-Example: http://satspaysession.vercel.com/usd?amount=100 
+Example: http://satspaysession.vercel.com/fiat/usd/amt/100 
 
 The above link, given the parameters of 100 USD, will calculate the equivalent amount of sats and 
 then redirect the user to a lightning invoice created by the satspayserver extension.
@@ -12,13 +12,14 @@ then redirect the user to a lightning invoice created by the satspayserver exten
 
 set your LNBits environment variables in vercel
 
+```sh
 LNBITS_WALLET=''
 INVOICE_KEY=''
 ONCHAIN=''
-
+```
 
 ```
-  headers: {
+  headers =  {
           "Content-Type": "application/json",
           "X-Api-Key": INVOICE_API_KEY,
         }

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from . utils import get_sats_amt
+from fastapi.responses import RedirectResponse
+from . utils import get_sats_amt, get_lnbits_satspay, is_https_url
 
 title = "satspay session"
 description = "simple url bridge to lnbits satspay extension"
@@ -35,12 +36,23 @@ def Home():
 def about():
     return 'About'
 
+
+
 @app.get('/fiat/{fiat}/amt/{amount}')
 def dynamic_endpoint(fiat: str, amount: int):
     if type(amount) is int:
-        content =  f"Endpoint for {fiat.upper()}, The amount is: {amount}. "
         sats = int(get_sats_amt(int(amount), fiat.upper()))
+        content =  f"Endpoint for {fiat.upper()}, The amount is: {amount}. "
         content += f" Sats amount: {sats}"
-        return content
+        print(content)
+
+        res_url = get_lnbits_satspay(sats)
+        print("\n\n Repsonse URL: ", res_url)
+        
+        if is_https_url(res_url): 
+            # Redirect to an external URL
+            return RedirectResponse(url=res_url, status_code=302)
+        else: 
+            return res_url
     else:
         return f"Endpoint for {fiat}, No amount provided as integer."
