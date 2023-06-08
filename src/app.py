@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from locale import atof, setlocale, LC_NUMERIC
 import requests
+from utils import coindesk_btc_fiat, get_sats_amt
 
 app = FastAPI()
 
@@ -11,24 +12,6 @@ origins = [
     "http://localhost:8000",
 ]
 
-
-def coindesk_btc_fiat(symbol):
-    # batch the requests together via asyncio or multiprocessing
-    setlocale(LC_NUMERIC, '')
-    url = f'https://api.coindesk.com/v1/bpi/currentprice/{symbol}.json'
-    response = requests.get(url)
-    ticker = response.json()
-    time = ticker["time"]['updated']
-    rate = ticker['bpi'][symbol]['rate']
-    parsed_rate = atof(rate)
-    return time, parsed_rate
-
-def get_sats_amt(amount, fiat):
-   time, rate = coindesk_btc_fiat(fiat)
-   btcfiat = "%.2f" % rate
-   moscowtime = int(100000000/float(btcfiat))
-   satstotal =  float(amount * moscowtime)
-   return satstotal
 
 @app.get("/")
 def Home():
