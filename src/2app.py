@@ -1,4 +1,7 @@
 from flask import Flask
+from locale import atof, setlocale, LC_NUMERIC
+import requests
+import uvicorn
 
 app = Flask(__name__)
 
@@ -28,13 +31,17 @@ def home():
 def about():
     return 'About'
 
-@app.route('/<fiat>')
-def dynamic_endpoint(fiat):
-        amount = request.args.get('amount')  
-    if amount:
-        content =  f"Endpoint for {fiat}, The amount is: {amount}"
-        sats = get_sats_amt(amount, fiat)
-        content += f"Sats amount: {sats}"
-        return content
-    else:
-        return f"Endpoint for {fiat}, No amount provided."
+# @app.route('/<fiat>')
+# def dynamic_endpoint(fiat):
+#     amount = requests.args.get('amount')  
+#     if amount:
+#         content =  f"Endpoint for {fiat}, The amount is: {amount}"
+#         sats = get_sats_amt(amount, fiat)
+#         content += f"Sats amount: {sats}"
+#         return content
+#     else:
+#         return f"Endpoint for {fiat}, No amount provided."
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, host='0.0.0.0', port=8000)

@@ -8,32 +8,56 @@ Example: http://satspaysession.vercel.com/usd?amount=100
 The above link, given the parameters of 100 USD, will calculate the equivalent amount of sats and 
 then redirect the user to a lightning invoice created by the satspayserver extension.
 
+## Env variables
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask&demo-title=Flask%20%2B%20Vercel&demo-description=Use%20Flask%202%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+set your LNBits environment variables in vercel
 
-# Flask + Vercel
+LNBITS_WALLET=''
+INVOICE_KEY=''
+ONCHAIN=''
 
-This example shows how to use Flask 2 on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
 
-## Demo
-
-https://flask-python-template.vercel.app/
-
-## How it Works
-
-This example uses the Web Server Gateway Interface (WSGI) with Flask to enable handling requests on Vercel with Serverless Functions.
-
-## Running Locally
-
-```bash
-npm i -g vercel
-vercel dev
+```
+  headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": INVOICE_API_KEY,
+        }
 ```
 
-Your Flask application is now available at `http://localhost:3000`.
+Json passed in body 
+```
+{
+  "onchainwallet": "string",
+  "lnbitswallet": "string",
+  "description": "string",
+  "webhook": "string",
+  "completelink": "string",
+  "completelinktext": "string",
+  "custom_css": "string",
+  "time": 1,
+  "amount": 1,
+  "extra": "{\"mempool_endpoint\": \"https://mempool.space\", \"network\": \"Mainnet\"}"
+}
+```
 
-## One-Click Deploy
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+# FastAPI + Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask&demo-title=Flask%20%2B%20Vercel&demo-description=Use%20Flask%202%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+This example shows how to use FastAPI on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
+
+
+## To install
+
+```sh
+python3 -m venv venv 
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## To run this app locally
+
+```sh
+uvicorn src.app:app --reload
+```
+
+Your application is now available at `http://localhost:8000`.
