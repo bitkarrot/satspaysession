@@ -42,13 +42,14 @@ def about():
 def dynamic_endpoint(fiat: str, amount: int):
     if type(amount) is int:
         sats = int(get_sats_amt(int(amount), fiat.upper()))
-        content =  f"Endpoint for {fiat.upper()}, The amount is: {amount}. "
-        content += f" Sats amount: {sats}"
-        print(content)
+
+        # content =  f"Endpoint for {fiat.upper()}, The amount is: {amount}. "
+        # content += f" Sats amount: {sats}"
+        # print(content)
 
         res_url = get_lnbits_satspay(sats)
-        print("\n\n Repsonse URL: ", res_url)
-        
+        # print("\n\n Repsonse URL: ", res_url)
+
         if is_https_url(res_url): 
             # Redirect to an external URL
             return RedirectResponse(url=res_url, status_code=302)

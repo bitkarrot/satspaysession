@@ -16,7 +16,7 @@ def coindesk_btc_fiat(symbol):
 
 def get_sats_amt(amount, fiat):
    time, rate = coindesk_btc_fiat(fiat)
-   print("Time: ", time, "Rate: ", rate)
+   # print("Time: ", time, "Rate: ", rate)
    btcfiat = "%.2f" % rate
    moscowtime = int(100000000/float(btcfiat))
    satstotal =  float(amount * moscowtime)
@@ -51,9 +51,9 @@ def get_lnbits_satspay(sats_amount: int):
             "X-Api-Key": INVOICE_API_KEY,
     }
 
-    print(body)
-    print(headers)
-    print(url)
+    # print(body)
+    # print(headers)
+    # print(url)
 
     try:
         # Convert the body data to JSON format
@@ -64,8 +64,8 @@ def get_lnbits_satspay(sats_amount: int):
         if response.status_code == 200:
             # Request was successful
             res_data = response.json()
-            print('Request was successful')
-            print(res_data)
+            # print('Request was successful')
+            # print(res_data)
             charge_id = res_data['id']
             response_url = LNBITS_URL + "/satspay/" + charge_id
             return response_url
@@ -74,10 +74,10 @@ def get_lnbits_satspay(sats_amount: int):
             # Request failed
             resp_data = ('Request failed with status code:', response.status_code)
             resp_data += response.text
-            print(resp_data)
+            # print(resp_data)
             return resp_data
     except Exception as e:
-        print(e)
+        # print(e)
         return str(e)
 
 def is_https_url(url):
