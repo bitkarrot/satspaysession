@@ -17,9 +17,10 @@
   <!-- Nav -->
   <nav class="container-fluid" style="border-bottom-style:solid; border-color: rgb(66, 66, 66); border-width: 0.1px">
   <ul>
-      <img src="/static/images/bitkarrot_256.jpg" height="64" width="64"
-      alt="Bitkarrot" />
-    </a>
+      <a href="/">
+        <img src="/static/images/bitkarrot_256.jpg" height="64" width="64"
+        alt="Bitkarrot" />
+      </a>
   </ul>
     <ul>
       <li>
@@ -50,17 +51,22 @@
             <section>
                 <div class="center">
                     <h4 style="color:#A5D601"> 
-                        <a href="{{satslink}}">{{satslink}}</a>
+                        <a href="{{satslink}}">
+                          <span id="sats-link">                            
+                          </span>
+                        </a>
                     </h4>
                 </div>
             </section>
-
-            <form id="my-form" action="/" method="post">
-                <fieldset>
+              <!-- <form id ="my-form"> -->
+              <fieldset>
                   <label>
                     3 Letter Fiat Code (USD, EUR, etc.)
                     <input
+                      id="inputFiat"
                       name="fiat"
+                      type="text"
+                      maxlength="3"
                       placeholder="{{fiat}}"
                       value="{{fiat}}"
                     />
@@ -68,14 +74,19 @@
                   <label>
                     Amount
                     <input
-                      name="amount"
-                      placeholder="100"
-                      value="{{amount}}"
+                        id="inputAmount"
+                        type="number"
+                        name="amount"
+                        placeholder="100"
+                        value="{{amount}}"
                       />
                   </label>
                   <label>
                     Short Description (optional, Max 15 characters)
                     <input
+                      id="inputDesc"
+                      type="text"
+                      maxlength="15"
                       name="description"
                       placeholder="Meeting"
                       value="{{description}}"
@@ -86,31 +97,37 @@
                 <input
                   type="submit"
                   value="Get Invoice Link!"
+                  onclick="updateLink()"
                 />
-              </form>
+              <!-- </form> -->
             </div>
       </div>
       <div align="left">
-        <p>
-            <h4>Why do this?</h4>
+          <h4>Why do this?</h4>
             
-            Because we want to be able to specify a BTCPay style lightning invoice 
-            in sats with the USD amount (or any other fiat) with
-            a link instead of creating it manually from within
-            the LNBits web interface. Unlike a regular invoice, 
-            the satspay server has a nice a count down timer and option 
-            for both LN or OnChain payments.
+          <p>
+            So that we can access a BTCPay 
+            style lightning invoice in USD or fiat 
+            with a link instead of creating it
+            manually from within the LNBits web interface. 
+            Unlike a regular invoice, the satspay server has a nice 
+            a count down timer and option for both LN or OnChain payments.  
+          </p>
 
-            We can then share links or add to other applications, 
-            such as calendar bookings without extra integration steps.
-        </p>
-        <p>
-            Alternatively, you can just make a url directly without this form, 
-            using the guideline below.
-        </p>
-        <p><em>
+          <p>
+          Links can be added or shared to other applications, 
+          such as calendar bookings without extra integration steps.
+          </p>
+            
+          <p>
+          Alternatively, you can just make a url directly without this form, 
+          using the guideline below.
+          </p>
+
+          <p>
+            <em>
             URL Pattern: https://satspaylink.vercel.app/fiat/{currency}/amt/{value}
-        </em>
+            </em>
         </p>           
     </div>
     </section>
@@ -119,8 +136,43 @@
         Source </a>
     </footer>
   </main>
-
-
 </body>
 
+<script>
+    const satlink = document.getElementById('sats-link')
+
+    function updateLink() {
+      let newValue = "https://satspaylink.vercel.app/fiat/" + document.getElementById("inputFiat").value + "/amt/" + document.getElementById("inputAmount").value; 
+      var inputDescValue = document.getElementById("inputDesc").value;
+      if (typeof inputDescValue === "string" && inputDescValue.length > 0) {
+        newValue = newValue + "/desc/" + inputDescValue
+      }
+      document.getElementById("sats-link").textContent = newValue;
+    }
+    
+
+    var inputDesc = document.getElementById("inputDesc");
+    inputDesc.addEventListener("input", function() {
+      if (inputDesc.value.length > 15) {
+        inputDesc.value = inputDesc.value.slice(0, 15);
+      }
+    });
+    var inputField = document.getElementById("inputFiat");
+    inputField.addEventListener("input", function() {
+      if (inputField.value.length > 3) {
+        inputField.value = inputField.value.slice(0, 3);
+      }
+    });
+
+    var inputAmt = document.getElementById("inputAmount");
+     inputAmt.addEventListener('input', (event) => {
+        const userInput = event.target.value;
+        const regex = /^\d+(\.\d{0,2})?$/;
+        const isValid = regex.test(userInput);
+        if (!isValid) {
+          event.target.value = userInput.slice(0, -1);
+        }
+    });
+
+  </script>
 </html>

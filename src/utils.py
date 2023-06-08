@@ -1,7 +1,7 @@
 from locale import atof, setlocale, LC_NUMERIC
 import requests
 import os
-import json 
+import json
 
 def coindesk_btc_fiat(symbol):
     # batch the requests together via asyncio or multiprocessing
@@ -30,13 +30,20 @@ LNBITS_URL = os.environ['LNBITS_URL']
 webhook = os.environ['WEBHOOK']
 sats_url = '/satspay/api/v1/charge'
 
-def get_lnbits_satspay(sats_amount: int):
+def get_lnbits_satspay(sats_amount: int,  description: str):
     url = LNBITS_URL + sats_url
+    desc = "SatsPay Link"
+    print("Default description: ", desc)
+
+    if description is not '':
+        desc = description
+        
+    print("description: ", desc)
 
     body = {
         "onchainwallet": ONCHAIN_WALLET,
         "lnbitswallet": LNBITS_WALLET,
-        "description": "SatsPay Session",
+        "description": desc,
         "webhook": webhook,
         "completelink": "",
         "completelinktext": "",
@@ -64,8 +71,8 @@ def get_lnbits_satspay(sats_amount: int):
         if response.status_code == 200:
             # Request was successful
             res_data = response.json()
-            # print('Request was successful')
-            # print(res_data)
+            print('Request was successful')
+            print(res_data)
             charge_id = res_data['id']
             response_url = LNBITS_URL + "/satspay/" + charge_id
             return response_url
@@ -95,10 +102,20 @@ if __name__ == '__main__':
         total = get_sats_amt(amount=amount, fiat=fiat.upper())
         print("Fiat: ", fiat, "Amount:", amount)
         print("Total: ", total)
-        res_url = get_lnbits_satspay(total)
+        print("test no description")
+        res_url = get_lnbits_satspay(total, '')
         if is_https_url(res_url): 
             print("\n\n Repsonse URL: ", res_url)
         else: 
             print("Error messsages: " + res_url)
+        
+        description = "satspay link"
+        print("test description: ", description)
+        res_url = get_lnbits_satspay(total, description)
+        if is_https_url(res_url): 
+            print("\n\n Repsonse URL: ", res_url)
+        else: 
+            print("Error messsages: " + res_url)
+
     except Exception as e:
         print(e)
