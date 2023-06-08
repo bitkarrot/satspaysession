@@ -1,9 +1,22 @@
 from fastapi import FastAPI
-from locale import atof, setlocale, LC_NUMERIC
-import requests
-from utils import coindesk_btc_fiat, get_sats_amt
+from . utils import get_sats_amt
 
-app = FastAPI()
+title = "satspay session"
+description = "simple url bridge to lnbits satspay extension"
+
+app = FastAPI(
+    title=title,
+    description=description,
+    version="0.0.1 alpha",
+    contact={
+        "name": "bitkarrot",
+        "url": "http://github.com/bitkarrot",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://mit-license.org/",
+    },
+)
 
 origins = [
     "http://localhost",
@@ -22,13 +35,12 @@ def Home():
 def about():
     return 'About'
 
-# @app.route('/<fiat>')
-# def dynamic_endpoint(fiat):
-#     amount = requests.args.get('amount')  
-#     if amount:
-#         content =  f"Endpoint for {fiat}, The amount is: {amount}"
-#         sats = get_sats_amt(amount, fiat)
-#         content += f"Sats amount: {sats}"
-#         return content
-#     else:
-#         return f"Endpoint for {fiat}, No amount provided."
+@app.get('/fiat/{fiat}/amt/{amount}')
+def dynamic_endpoint(fiat: str, amount: int):
+    if type(amount) is int:
+        content =  f"Endpoint for {fiat.upper()}, The amount is: {amount}. "
+        sats = int(get_sats_amt(int(amount), fiat.upper()))
+        content += f" Sats amount: {sats}"
+        return content
+    else:
+        return f"Endpoint for {fiat}, No amount provided as integer."

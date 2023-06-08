@@ -1,7 +1,6 @@
 from locale import atof, setlocale, LC_NUMERIC
 import requests
 
-
 def coindesk_btc_fiat(symbol):
     # batch the requests together via asyncio or multiprocessing
     setlocale(LC_NUMERIC, '')
