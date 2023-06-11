@@ -29,13 +29,16 @@ ONCHAIN_WALLET = os.environ['ONCHAIN_WALLET']
 LNBITS_URL = os.environ['LNBITS_URL']
 webhook = os.environ['WEBHOOK']
 sats_url = '/satspay/api/v1/charge'
+email_url = '/smtp/api/v1/email/' 
+# TODO: integrate webhook data forwarded to smtp extension as email
+# {emailaddress_id}/send'
 
 def get_lnbits_satspay(sats_amount: int,  description: str):
     url = LNBITS_URL + sats_url
     desc = "SatsPay Link"
     print("Default description: ", desc)
 
-    if description is not '':
+    if description != '':
         desc = description
         
     print("description: ", desc)

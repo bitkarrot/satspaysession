@@ -40,7 +40,7 @@
         <h1 style="color:#A5D601">
             Welcome to {{ title }}!
         </h1>
-        <p>This micro app delivers a custom Invoice amount Link to
+        <p>This micro app creates a custom Invoice amount Link to
             the LNBits SatsPayExtension, payable to Bitkarrot.
         </p>
     </hgroup>
@@ -50,11 +50,16 @@
         <div align="center">
             <section>
                 <div class="center">
-                    <h4 style="color:#A5D601"> 
-                        <a href="{{satslink}}">
-                          <span id="sats-link">                            
-                          </span>
-                        </a>
+                    <h4 style="color:#A5D601">
+                      <p>
+                        <!-- <span id="resetmsg"></span> -->
+                          <div data-theme="dark">
+                            <button id="copy-link" class="outline">
+                              <span id="sats-link"></span>                                        
+                              <img src="/static/images/lime_copy.png" width="30" alt="Copy" />
+                            </button>
+                          </div>
+                      </p>
                     </h4>
                 </div>
             </section>
@@ -93,12 +98,24 @@
                       />
                   </label>
 
-                </fieldset>              
-                <input
-                  type="submit"
-                  value="Get Invoice Link!"
-                  onclick="updateLink()"
-                />
+                </fieldset>  
+                <div class="grid">
+                <div>
+                  <input
+                    type="submit"
+                    value="Get Invoice Link!"
+                    onclick="updateLink()"
+                  />
+                </div>
+                  <div>
+                    <input
+                    class="secondary"
+                    type="submit"
+                    value="Reset"
+                    onclick="reset()"
+                  /> 
+                </div>
+              </div>
               <!-- </form> -->
             </div>
       </div>
@@ -139,18 +156,36 @@
 </body>
 
 <script>
-    const satlink = document.getElementById('sats-link')
+    let satlink = document.getElementById('sats-link')
+    let satquote = document.querySelector('#sats-link')
+    let handleCopyClick = document.querySelector('#copy-link');
+
+    handleCopyClick.addEventListener('click', () => {
+      let text = satquote.textContent;
+      navigator.clipboard.writeText(`${text}`);
+    
+      alert(`Copied to clipboard!`);
+    });
+
+    function reset()  { 
+      location.reload()
+      document.getElementById("inputAmount").value = "100"
+      document.getElementById("inputFiat").value = "USD"
+      document.getElementById("inputDesc").value = "Meeting"
+    }
 
     function updateLink() {
       let newValue = "https://satspaylink.vercel.app/fiat/" + document.getElementById("inputFiat").value + "/amt/" + document.getElementById("inputAmount").value; 
       var inputDescValue = document.getElementById("inputDesc").value;
       if (typeof inputDescValue === "string" && inputDescValue.length > 0) {
-        newValue = newValue + "/desc/" + inputDescValue
+        var modifiedStr = inputDescValue.replace(/\s/g, "-");
+        newValue = newValue + "/desc/" + modifiedStr
       }
       document.getElementById("sats-link").textContent = newValue;
+      document.getElementById("resetmsg").textContent ="Click Link to reset"
+
     }
     
-
     var inputDesc = document.getElementById("inputDesc");
     inputDesc.addEventListener("input", function() {
       if (inputDesc.value.length > 15) {

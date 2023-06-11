@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Body, Header
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import starlette.status as status
+from typing import Optional
+import http
 import logging
 
 from . utils import get_sats_amt, get_lnbits_satspay, is_https_url
@@ -74,7 +76,6 @@ async def dynamic_longendpoint(fiat: str, amount: int, description: str):
         return res_url
 
 
-# initial get for index page
 @app.get("/")
 async def initial_page(request: Request):
   fiat = "USD"
@@ -88,37 +89,17 @@ async def initial_page(request: Request):
                                           'amount': 100,
                                       })
 
-# @app.post("/link")
-# async def link_page(request: Request, fiat: str = Form(None), amount: int = Form(None), description: str = Form(None)):
-#     try:
-#         # validation check
-#         if fiat is None:
-#             return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
-#         if amount is None:
-#              return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
+@app.get("/thanks")
+async def thanks_page(request: Request):
+    return templates.TemplateResponse("thanks.html", context={'request': request})    
 
-#         url = str(request.url).split("/")
-#         base_url =  "/".join(url[:-1])
-#         satslink = base_url
 
-#         if description is None:
-#             satslink += f"/fiat/{fiat}/amt/{amount}"
-
-#         if description is not None:
-#             desc = "-".join(description.split())
-#             satslink +=  f"/fiat/{fiat}/amt/{amount}/desc/{desc}"
-
-#         return templates.TemplateResponse("index.html",
-#                                     context={
-#                                         'request': request,
-#                                         'title': "SatsPay Link",
-#                                         'fiat': fiat,
-#                                         'description': description,
-#                                         'amount': 100,
-#                                         'satslink': satslink
-#                                     })
-#     except Exception as e:
-#             logging.error(e)
+@app.post("/thanks", status_code=http.HTTPStatus.ACCEPTED)
+async def thanks_post(request: Request, x_hub_signature: str = Header(None)):
+     # Process the captured data as needed
+    payload= await request.body()
+    print("thanks data:", str(payload))  # TODO: Optionally forward tx webhook data to smtp ext.
+    return templates.TemplateResponse("thanks.html", context={'request': request})    
 
 
 @app.get('/about')
