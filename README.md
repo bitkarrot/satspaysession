@@ -1,12 +1,25 @@
 # Satspay Session
 
-This micro app delivers a custom Invoice amount from the SatsPayExtension fron LNbits via an FastAPI endpoint. 
+This micro app delivers a custom Invoice amount from the SatsPayExtension fron LNbits via an FastAPI endpoint.
+
 Why do this? Because we want to be able to specify a lightning invoice in sats with the USD amount (or any other fiat equivalent amount) with a link instead of creating it manually from within the LNBits web interface. 
 
-URL Pattern:
+This is a personal service, so in order to use it with your LNBits account you'll need to put in your credentials and then 1 Click deploy to vercel ( See below ) or self host it yourself.
+
+### Flow Diagram:
+
+Create LINK ---> convert fiat amt to sats, add optional message  ----> 
+
+----> forward to SatsPayServer on LNBits --> Display Timed QR Code
+
+
+### LINK Pattern:
 https://satspaylink.vercel.app/fiat/{currency}/amt/{value}
 
-Example: 
+### Example: 
+
+<img width="525" alt="Screenshot 2023-06-19 at 2 26 50 PM" src="https://github.com/lightningames/satspaysession/assets/73979971/661cdc20-417d-472b-8870-e5f4898ee518">
+
 
 This is a live example, where the repo is deployed at satspaylink.vercel.app and the user specifies currency type and amount at the url: 
 
@@ -19,9 +32,7 @@ Clicking on the above link will redirect to the lnbits satspay extension with th
 
 <img width="545" alt="Screenshot 2023-06-08 at 10 29 07 AM" src="https://github.com/bitkarrot/satspaysession/assets/73979971/e958e4a7-779c-443d-82cf-842ad181eb86">
 
-
-
-## Env variables
+## Environment variables
 
 For More information about how SatsPay Server works in LNBits, please visit the [extension page](https://github.com/lnbits/satspay)
 and the [LNbits.com website](https://lnbits.com)
