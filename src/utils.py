@@ -61,9 +61,9 @@ def get_lnbits_satspay(sats_amount: int,  description: str):
             "X-Api-Key": INVOICE_API_KEY,
     }
 
-    # print(body)
-    # print(headers)
-    # print(url)
+    print(body)
+    print(headers)
+    print(url)
 
     try:
         # Convert the body data to JSON format

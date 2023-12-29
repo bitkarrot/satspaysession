@@ -47,13 +47,23 @@ app.mount("/static", StaticFiles(directory="static"), name='static')
 templates = Jinja2Templates(directory='templates/')
 
 
+# def handle_params(fiat, amount, description):
+# def handle_params(amount, description):
 
-def handle_params(fiat, amount, description):
-    if type(amount) is int:
-        sats = int(get_sats_amt(int(amount), fiat.upper()))
-        res_url = get_lnbits_satspay(sats, description=description)
-        print("handlparams response: ", res_url)
+def handle_params(*args):
+    if len(args) == 2:
+        amount, description = args
+        res_url = get_lnbits_satspay(int(amount), description=description)
+        print("2 args, handle params response: ", res_url)
         return res_url
+    elif len(args) == 3:
+        fiat, amount, description = args
+        if type(amount) is int:
+            sats = int(get_sats_amt(int(amount), fiat.upper()))
+            print('sats: ', sats, 'description: ', description)
+            res_url = get_lnbits_satspay(sats, description=description)
+            print("3 args, handle params response: ", res_url)
+            return res_url
     else: 
         return f"Endpoint for {fiat}, No amount provided as integer."
     
@@ -74,6 +84,19 @@ async def dynamic_longendpoint(fiat: str, amount: int, description: str):
         return RedirectResponse(url=res_url, status_code=302)
     else: 
         return res_url
+
+
+@app.get('/amt/{amount}/desc/{description}')
+async def dynamic_satendpoint(amount: int, description: str):
+    '''
+    Endpoint for satoshis amount and description
+    '''
+    res_url = handle_params(amount, description)
+    if is_https_url(res_url): 
+        return RedirectResponse(url=res_url, status_code=302)
+    else: 
+        return res_url
+
 
 
 @app.get("/")

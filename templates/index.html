@@ -8,7 +8,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta property="og:url" content="https://satspaylink.vercel.com" />
+  <meta property="og:url" content="" />
   <meta charset="utf-8">  
   <title>{{ title }}</title>
 </head>
@@ -41,7 +41,7 @@
             Welcome to {{ title }}!
         </h1>
         <p>This micro app creates a custom Invoice amount Link to
-            the LNBits SatsPayExtension, payable to Bitkarrot.
+            the LNBits SatsPayExtension.
         </p>
     </hgroup>
 
@@ -143,19 +143,31 @@
 
           <p>
             <em>
-            URL Pattern: https://satspaylink.vercel.app/fiat/{currency}/amt/{value}
+            URL Pattern: <p id="urlDisplay"></p>
             </em>
-        </p>           
+            <!-- https://satspaylink.vercel.app/fiat/{currency}/amt/{value} -->
+          </p>
+          or for satoshis, skip fiat and currency type, just use <em>https://domain.com/amt/{value}</em>
+          
     </div>
     </section>
-    <footer>
+    <footer
       Built with <a href="https://picocss.com"> Pico </a> • <a href="https://github.com/bitkarrot/satspaysession">
         Source </a>
     </footer>
   </main>
 </body>
 
+
 <script>
+    // Get the current page's URL
+    var currentPageUrl = window.location.href;
+    
+    // Display the URL in the console or use it as needed
+    console.log("Current Page URL:", currentPageUrl);
+    // Display the URL in the HTML body
+    document.getElementById('urlDisplay').textContent = currentPageUrl + "fiat/{currency}/amt/{value}";
+
     let satlink = document.getElementById('sats-link')
     let satquote = document.querySelector('#sats-link')
     let handleCopyClick = document.querySelector('#copy-link');
@@ -175,7 +187,7 @@
     }
 
     function updateLink() {
-      let newValue = "https://satspaylink.vercel.app/fiat/" + document.getElementById("inputFiat").value + "/amt/" + document.getElementById("inputAmount").value; 
+      let newValue = currentPageUrl + "fiat/" + document.getElementById("inputFiat").value + "/amt/" + document.getElementById("inputAmount").value; 
       var inputDescValue = document.getElementById("inputDesc").value;
       if (typeof inputDescValue === "string" && inputDescValue.length > 0) {
         var modifiedStr = inputDescValue.replace(/\s/g, "-");
