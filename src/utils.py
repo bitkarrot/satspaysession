@@ -28,6 +28,9 @@ LNBITS_WALLET = os.environ['LNBITS_WALLET']
 ONCHAIN_WALLET = os.environ['ONCHAIN_WALLET']
 LNBITS_URL = os.environ['LNBITS_URL']
 webhook = os.environ['WEBHOOK']
+completelink = os.environ['COMPLETELINK']
+completelinktext = os.environ['COMPLETELINKTEXT']
+customcss= os.environ['CUSTOMCSS']
 sats_url = '/satspay/api/v1/charge'
 email_url = '/smtp/api/v1/email/' 
 # TODO: integrate webhook data forwarded to smtp extension as email
@@ -35,7 +38,7 @@ email_url = '/smtp/api/v1/email/'
 
 def get_lnbits_satspay(sats_amount: int,  description: str):
     url = LNBITS_URL + sats_url
-    desc = "SatsPay Link"
+    desc = "LNBits SatsPay Link"
     print("Default description: ", desc)
 
     if description != '':
@@ -48,9 +51,9 @@ def get_lnbits_satspay(sats_amount: int,  description: str):
         "lnbitswallet": LNBITS_WALLET,
         "description": desc,
         "webhook": webhook,
-        "completelink": "",
-        "completelinktext": "",
-        "custom_css": "",
+        "completelink": completelink,
+        "completelinktext": completelinktext,
+        "custom_css": customcss,
         "time": 1440,
         "amount": sats_amount,
         "extra": "{\"mempool_endpoint\": \"https://mempool.space\", \"network\": \"Mainnet\"}"
