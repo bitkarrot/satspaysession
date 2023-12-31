@@ -96,15 +96,6 @@ def get_lnbits_satspay(sats_amount: int, desc: str):
 
 
 def is_https_url(url):
-    """
-    Check if the given URL is an HTTPS URL.
-
-    Parameters:
-    - url (str): The URL to be checked.
-
-    Returns:
-    - bool: True if the URL starts with "https://", False otherwise.
-    """
     if url.startswith("https://"):
         return True
     else:
