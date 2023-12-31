@@ -1,7 +1,9 @@
-from locale import LC_NUMERIC, atof, setlocale
+# from locale import LC_NUMERIC, atof, setlocale
+from exchange_rates import fiat_amount_as_satoshis
 import os
 import json
 import requests
+import asyncio
 
 INVOICE_API_KEY = os.environ["INVOICE_API_KEY"]
 LNBITS_WALLET = os.environ["LNBITS_WALLET"]
@@ -14,28 +16,8 @@ customcss = os.environ["CUSTOMCSS"]
 
 sats_url = "/satspay/api/v1/charge"
 email_url = "/smtp/api/v1/email/"
+
 # TODO: integrate webhook data forwarded
-
-def coindesk_btc_fiat(symbol):
-    # batch the requests together via asyncio or multiprocessing
-    setlocale(LC_NUMERIC, "")
-    url = f"https://api.coindesk.com/v1/bpi/currentprice/{symbol}.json"
-    response = requests.get(url, timeout=10)  # set a timeout of 10 seconds
-    ticker = response.json()
-    time = ticker["time"]["updated"]
-    rate = ticker["bpi"][symbol]["rate"]
-    parsed_rate = atof(rate)
-    return time, parsed_rate
-
-
-def get_sats_amt(amount, fiat):
-    time, rate = coindesk_btc_fiat(fiat)
-    # print("Time: ", time, "Rate: ", rate)
-    btcfiat = "%.2f" % rate
-    moscowtime = int(100000000 / float(btcfiat))
-    satstotal = float(amount * moscowtime)
-    return satstotal
-
 
 def get_lnbits_satspay(sats_amount: int, desc: str):
     url = LNBITS_URL + sats_url
@@ -102,11 +84,13 @@ def is_https_url(url):
         return False
 
 
-if __name__ == "__main__":
+
+async def main():
     try:
-        Fiat = "usd"  # Must be upper case
-        Amount = 100  # Must be integer
-        total = get_sats_amt(amount=Amount, fiat=Fiat.upper())
+        Fiat = "USD"  # Must be upper case
+        Amount = 10 # Must be integer
+#        total = get_sats_amt(amount=Amount, fiat=Fiat.upper())
+        total = await fiat_amount_as_satoshis(Amount, Fiat.upper())
         print("Fiat: ", Fiat, "Amount:", Amount)
         print("Total: ", total)
         print("test no description")
@@ -126,3 +110,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(e)
+
+
+asyncio.run(main())

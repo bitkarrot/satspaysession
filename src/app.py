@@ -6,7 +6,9 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .utils import get_lnbits_satspay, get_sats_amt, is_https_url
+from .utils import get_lnbits_satspay, is_https_url
+from .exchange_rates import fiat_amount_as_satoshis
+
 
 TITLE = "satspay session"
 APP_DESC = "simple url bridge to lnbits satspay extension"
@@ -68,7 +70,7 @@ def handle_params(*args):
     elif len(args) == 3:
         fiat, amount, description = args
         if isinstance(amount, int):
-            sats = int(get_sats_amt(int(amount), fiat.upper()))
+            sats = int(fiat_amount_as_satoshis(int(amount), fiat.upper()))
             print("sats: ", sats, "description: ", description)
             res_url = get_lnbits_satspay(sats, description=description)
             print("3 args, handle params response: ", res_url)
