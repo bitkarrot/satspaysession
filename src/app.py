@@ -65,6 +65,8 @@ async def handle_params(*args):
     Raises:
         None
     """
+    logger.info(args)
+
     if len(args) == 2:
         amount, description = args
         res_url = await get_lnbits_satspay(int(amount), description)
@@ -134,6 +136,16 @@ async def dynamic_satendpoint(amount: int, description: str):
     else:
         return res_url
 
+@app.get("/amt/{amount}")
+async def dynamic_sats(amount: int):
+    """
+    Endpoint for satoshis amount only
+    """
+    res_url = await handle_params(amount, "")
+    if is_https_url(res_url):
+        return RedirectResponse(url=res_url, status_code=302)
+    else:
+        return res_url
 
 @app.get("/")
 async def initial_page(request: Request):
