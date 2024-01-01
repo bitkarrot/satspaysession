@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-# from loguru import logger
+from loguru import logger
 
 from .exchange_rates import fiat_amount_as_satoshis
 from .utils import get_lnbits_satspay, is_https_url
@@ -68,16 +68,16 @@ async def handle_params(*args):
     if len(args) == 2:
         amount, description = args
         res_url = await get_lnbits_satspay(int(amount), description)
-        print("2 args, handle params response: ", res_url)
+        logger.info(f"2 args, handle params response: {res_url}")
         return res_url
     elif len(args) == 3:
         fiat, amount, description = args
         if isinstance(amount, int):
-            print("fiat: ", fiat.upper(), "amt: ", int(amount),"description: ", description)
+            logger.info(f"fiat: {fiat.upper()} amt: {int(amount)} description: {description}")
             sats =  await fiat_amount_as_satoshis(int(amount), fiat.upper())
-            print("fiat amt in satoshis: ", sats)
+            logger.info(f"fiat amt in satoshis: {sats}")
             res_url = await get_lnbits_satspay(sats, description)
-            print("3 args, handle params response: ", res_url)
+            logger.info(f"3 args, handle params response: {res_url}")
             return res_url
     else:
         return f"Endpoint for {fiat}, No amount provided as integer."
@@ -171,6 +171,14 @@ async def thanks_page(request: Request):
     Returns:
         TemplateResponse: The rendered thanks.html template.
     """
+    logger.info("Inside GET /thanks endpoint")
+    query_params = request.query_params
+    if query_params:
+        logger.info("thanks endpoint, data via GET")
+        for param_name, param_value in query_params.items():
+            print(f"Parameter Name: {param_name}, Value: {param_value}")
+    else:
+        logger.info("No data received via GET")
     return templates.TemplateResponse("thanks.html", context={"request": request})
 
 
@@ -185,9 +193,11 @@ async def thanks_post(request: Request):
     Returns:
         TemplateResponse: The HTML template response for 'thanks.html'.
     """
-    # Process the captured data as needed
+    logger.info("Inside POST /thanks endpoint")
     payload = await request.body()
-    print("thanks data:", str(payload))
+    logger.info(f"Thanks body POST: {str(payload)}")
+    data = await request.json()
+    logger.info(f"POST json DATA: {data}")
     return templates.TemplateResponse("thanks.html", context={"request": request})
 
 

@@ -4,7 +4,7 @@ from .exchange_rates import fiat_amount_as_satoshis
 import os
 import json
 import requests
-import asyncio
+# import asyncio
 
 INVOICE_API_KEY = os.environ["INVOICE_API_KEY"]
 LNBITS_WALLET = os.environ["LNBITS_WALLET"]
@@ -25,7 +25,7 @@ async def get_lnbits_satspay(sats_amount: int, desc: str):
     default_desc = "LNBits SatsPay Link"
     logger.info("Default description: ", default_desc)
 
-    if desc != "":
+    if desc == "":
         desc = default_desc
 
     logger.info("description: ", desc)
@@ -80,7 +80,7 @@ async def get_lnbits_satspay(sats_amount: int, desc: str):
         return str(e)
 
 
-def is_https_url(url):
+def is_https_url(url: str):
     if url.startswith("https://"):
         return True
     else:
@@ -90,9 +90,11 @@ def is_https_url(url):
 ######################################################################
 # To use this section below, remove the "." from .exchange_rates and .cache
 # in the import statements above and run from src/ directory
+# uncomment import asyncio and asyncio.run(main()) below
 #
 # from exchange_rates import fiat_amount_as_satoshis
 # from cache import cache
+######################################################################
 
 async def main():
     """
