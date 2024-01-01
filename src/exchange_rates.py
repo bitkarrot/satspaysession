@@ -1,12 +1,11 @@
 # this is a copy borrowed from https://github.com/lnbits/lnbits/blob/dev/lnbits/utils/exchange_rates.py
-
 import asyncio
-from typing import Callable, NamedTuple
-
 import httpx
+
+from typing import Callable, NamedTuple
 from loguru import logger
 
-from cache import cache
+from .cache import cache
 
 user_agent = "Mozilla/5.0 Gecko/20100101 Firefox/121.0"
 

@@ -1,5 +1,6 @@
-# from locale import LC_NUMERIC, atof, setlocale
-from exchange_rates import fiat_amount_as_satoshis
+from loguru import logger
+from .exchange_rates import fiat_amount_as_satoshis
+
 import os
 import json
 import requests
@@ -19,15 +20,15 @@ email_url = "/smtp/api/v1/email/"
 
 # TODO: integrate webhook data forwarded
 
-def get_lnbits_satspay(sats_amount: int, desc: str):
+async def get_lnbits_satspay(sats_amount: int, desc: str):
     url = LNBITS_URL + sats_url
     default_desc = "LNBits SatsPay Link"
-    print("Default description: ", default_desc)
+    logger.info("Default description: ", default_desc)
 
     if desc != "":
         desc = default_desc
 
-    print("description: ", desc)
+    logger.info("description: ", desc)
 
     body = {
         "onchainwallet": ONCHAIN_WALLET,
@@ -47,21 +48,23 @@ def get_lnbits_satspay(sats_amount: int, desc: str):
         "X-Api-Key": INVOICE_API_KEY,
     }
 
-    print(body)
-    print(headers)
-    print(url)
+    logger.info(body)
+    logger.info(headers)
+    logger.info(url)
 
     try:
         # Convert the body data to JSON format
         json_data = json.dumps(body)
-        response = requests.post(url, data=json_data, headers=headers, timeout=10)  # set a timeout of 10 seconds
+        response = requests.post(
+            url, data=json_data, headers=headers, timeout=10
+        )  # set a timeout of 10 seconds
 
         # Check the response status code
         if response.status_code == 200:
             # Request was successful
             res_data = response.json()
-            print("Request was successful")
-            print(res_data)
+            logger.info("Request was successful")
+            logger.info(res_data)
             charge_id = res_data["id"]
             response_url = LNBITS_URL + "/satspay/" + charge_id
             return response_url
@@ -70,10 +73,10 @@ def get_lnbits_satspay(sats_amount: int, desc: str):
             # Request failed
             resp_data = ("Request failed with status code:", response.status_code)
             resp_data += response.text
-            # print(resp_data)
+            # logger.info(resp_data)
             return resp_data
     except Exception as e:
-        # print(e)
+        # logger.info(e)
         return str(e)
 
 
@@ -84,32 +87,40 @@ def is_https_url(url):
         return False
 
 
+######################################################################
+# To use this section below, remove the "." from .exchange_rates and .cache
+# in the import statements above and run from src/ directory
+#
+# from exchange_rates import fiat_amount_as_satoshis
+# from cache import cache
 
 async def main():
+    """
+      For Testing use only
+    """
     try:
         Fiat = "USD"  # Must be upper case
-        Amount = 10 # Must be integer
-#        total = get_sats_amt(amount=Amount, fiat=Fiat.upper())
+        Amount = 10  # Must be integer
         total = await fiat_amount_as_satoshis(Amount, Fiat.upper())
-        print("Fiat: ", Fiat, "Amount:", Amount)
-        print("Total: ", total)
-        print("test no description")
-        res_url = get_lnbits_satspay(total, "")
+        logger.info(f"Fiat: {Fiat}  Amount: {Amount}")
+        logger.info(f"Total: {total}")
+        logger.info("test no description")
+        res_url = await get_lnbits_satspay(total, "")
         if is_https_url(res_url):
-            print("\n\n Repsonse URL: ", res_url)
+            logger.info(f"Repsonse URL: {res_url}")
         else:
-            print("Error messsages: " + res_url)
+            logger.info(f"Error messsages: {res_url}")
 
         App_Description = "satspay link"
-        print("test description: ", App_Description)
-        res_url = get_lnbits_satspay(total, App_Description)
+        logger.info(f"test description: {App_Description}")
+        res_url = await get_lnbits_satspay(total, App_Description)
         if is_https_url(res_url):
-            print("\n\n Repsonse URL: ", res_url)
+            logger.info(f"Repsonse URL: {res_url}")
         else:
-            print("Error messsages: " + res_url)
+            logger.info(f"Error messsages:{res_url}")
 
     except Exception as e:
-        print(e)
+        logger.error(f"running Main method exception: {e}")
 
 
-asyncio.run(main())
+#asyncio.run(main())

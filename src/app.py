@@ -5,10 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+# from loguru import logger
 
-from .utils import get_lnbits_satspay, is_https_url
 from .exchange_rates import fiat_amount_as_satoshis
-
+from .utils import get_lnbits_satspay, is_https_url
 
 TITLE = "satspay session"
 APP_DESC = "simple url bridge to lnbits satspay extension"
@@ -46,7 +46,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates/")
 
 
-def handle_params(*args):
+async def handle_params(*args):
     """
     Handle the parameters passed to the function.
 
@@ -54,9 +54,12 @@ def handle_params(*args):
         *args: Variable length argument list.
 
     Returns:
-        str: The response URL if the parameters are valid and the function is able to generate a response URL.
-            If the number of arguments is 2, the response URL is generated using the `amount` and `description` arguments.
-            If the number of arguments is 3, the response URL is generated using the `sats`, `description`, and `fiat` arguments.
+        str: The response URL if the parameters are valid and the
+                function is able to generate a response URL.
+            If the number of arguments is 2, the response URL is generated
+                using the `amount` and `description` arguments.
+            If the number of arguments is 3, the response URL is generated
+                using the `sats`, `description`, and `fiat` arguments.
             If the number of arguments is neither 2 nor 3, an error message is returned.
 
     Raises:
@@ -64,15 +67,16 @@ def handle_params(*args):
     """
     if len(args) == 2:
         amount, description = args
-        res_url = get_lnbits_satspay(int(amount), description=description)
+        res_url = await get_lnbits_satspay(int(amount), description)
         print("2 args, handle params response: ", res_url)
         return res_url
     elif len(args) == 3:
         fiat, amount, description = args
         if isinstance(amount, int):
-            sats = int(fiat_amount_as_satoshis(int(amount), fiat.upper()))
-            print("sats: ", sats, "description: ", description)
-            res_url = get_lnbits_satspay(sats, description=description)
+            print("fiat: ", fiat.upper(), "amt: ", int(amount),"description: ", description)
+            sats =  await fiat_amount_as_satoshis(int(amount), fiat.upper())
+            print("fiat amt in satoshis: ", sats)
+            res_url = await get_lnbits_satspay(sats, description)
             print("3 args, handle params response: ", res_url)
             return res_url
     else:
@@ -92,7 +96,7 @@ async def dynamic_endpoint(fiat: str, amount: int):
     - The URL to redirect to if it is an HTTPS URL.
     - Otherwise, the URL itself.
     """
-    res_url = handle_params(fiat, amount, "")
+    res_url = await handle_params(fiat, amount, "")
     if is_https_url(res_url):
         return RedirectResponse(url=res_url, status_code=302)
     else:
@@ -112,7 +116,7 @@ async def dynamic_longendpoint(fiat: str, amount: int, description: str):
     Returns:
         Union[RedirectResponse, str]: The result URL or a RedirectResponse if the URL is HTTPS.
     """
-    res_url = handle_params(fiat, amount, description)
+    res_url = await handle_params(fiat, amount, description)
     if is_https_url(res_url):
         return RedirectResponse(url=res_url, status_code=302)
     else:
@@ -124,11 +128,12 @@ async def dynamic_satendpoint(amount: int, description: str):
     """
     Endpoint for satoshis amount and description
     """
-    res_url = handle_params(amount, description)
+    res_url = await handle_params(amount, description)
     if is_https_url(res_url):
         return RedirectResponse(url=res_url, status_code=302)
     else:
         return res_url
+
 
 @app.get("/")
 async def initial_page(request: Request):
@@ -182,7 +187,6 @@ async def thanks_post(request: Request):
     """
     # Process the captured data as needed
     payload = await request.body()
-    # TODO: Optionally forward tx webhook data to smtp ext.
     print("thanks data:", str(payload))
     return templates.TemplateResponse("thanks.html", context={"request": request})
 
