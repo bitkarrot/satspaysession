@@ -182,8 +182,8 @@ async def thanks_page(request: Request):
     return templates.TemplateResponse("thanks.html", context={"request": request})
 
 
-@app.post("/thanks", status_code=http.HTTPStatus.ACCEPTED)
-async def thanks_post(request: Request):
+@app.post("/webhook", status_code=http.HTTPStatus.ACCEPTED)
+async def webhook_post(request: Request):
     """
     A handler for the HTTP POST request to '/thanks'.
 
@@ -193,7 +193,7 @@ async def thanks_post(request: Request):
     Returns:
         TemplateResponse: The HTML template response for 'thanks.html'.
     """
-    logger.info("Inside POST /thanks endpoint")
+    logger.info("Inside POST /webhook endpoint")
     payload = await request.body()
     logger.info(f"Thanks body POST: {str(payload)}")
     data = await request.json()
