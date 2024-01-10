@@ -22,7 +22,7 @@ email_url = "/smtp/api/v1/email/"
 
 async def get_lnbits_satspay(sats_amount: int, desc: str):
     url = LNBITS_URL + sats_url
-    default_desc = "LNBits SatsPay Link"
+    default_desc = "LNBits Invoice"
     logger.info("Default description: ", default_desc)
 
     if desc == "":
@@ -48,9 +48,9 @@ async def get_lnbits_satspay(sats_amount: int, desc: str):
         "X-Api-Key": INVOICE_API_KEY,
     }
 
-    logger.info(body)
-    logger.info(headers)
-    logger.info(url)
+    #logger.info(body)
+    #logger.info(headers)
+    #logger.info(url)
 
     try:
         # Convert the body data to JSON format
@@ -64,7 +64,7 @@ async def get_lnbits_satspay(sats_amount: int, desc: str):
             # Request was successful
             res_data = response.json()
             logger.info("Request was successful")
-            logger.info(res_data)
+            # logger.info(res_data)
             charge_id = res_data["id"]
             response_url = LNBITS_URL + "/satspay/" + charge_id
             return response_url
@@ -113,7 +113,7 @@ async def main():
         else:
             logger.info(f"Error messsages: {res_url}")
 
-        App_Description = "satspay link"
+        App_Description = "Invoice link"
         logger.info(f"test description: {App_Description}")
         res_url = await get_lnbits_satspay(total, App_Description)
         if is_https_url(res_url):

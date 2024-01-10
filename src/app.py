@@ -1,5 +1,7 @@
 import http
 
+from typing import Union 
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
@@ -137,15 +139,23 @@ async def dynamic_satendpoint(amount: int, description: str):
         return res_url
 
 @app.get("/amt/{amount}")
-async def dynamic_sats(amount: int):
+async def dynamic_sats(amount: int, desc: Union[str, None] = None):
     """
     Endpoint for satoshis amount only
+    with option for desc in the url, e.g.
+    /amt/{amount}?desc={desc}
     """
-    res_url = await handle_params(amount, "")
+    logger.info(f"amt: {amount} desc: {desc}")
+    description = ""
+    if not isinstance(desc, type(None)):
+        description = desc
+    logger.info(f'description: {description}')
+    res_url = await handle_params(amount, description)
     if is_https_url(res_url):
         return RedirectResponse(url=res_url, status_code=302)
     else:
         return res_url
+    # return {'amount': amount, 'description': description}
 
 @app.get("/")
 async def initial_page(request: Request):
