@@ -12,9 +12,16 @@ Create LINK ---> convert fiat amt to sats, add optional message  ---->
 
 ----> forward to SatsPayServer on LNBits --> Display Timed QR Code
 
-
 ### LINK Pattern:
+
 https://satspaylink.vercel.app/fiat/{currency}/amt/{value}
+
+### You can also just specify the sats amount if you want: 
+
+https://satspaylink.vercel.app/amt/100000
+
+this will autogenerate an invoice for 100,000 Sats 
+
 
 ### Example: 
 
