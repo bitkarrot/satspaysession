@@ -1,6 +1,6 @@
 requests==2.32.0
 fastapi==0.109.1
-Jinja2==3.1.4
+Jinja2==3.1.6
 uvicorn==0.20.0
 loguru==0.7.2
 aiofiles
